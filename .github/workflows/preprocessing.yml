@@ -1,0 +1,41 @@
+name: Automasi Preprocessing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  jalankan-preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Ambil kode dari repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Python 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # 3. Install Library 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn numpy seaborn matplotlib
+
+      # Masuk ke folder 'preprocessing' dulu baru run scriptnya
+      - name: Run Preprocessing Script
+        run: |
+          cd preprocessing
+          python automate_Juhar-Ananda.py
+          ls -l
+
+      # 5. Simpan hasilnya sebagai Artifact
+      - name: Upload Processed Dataset
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataset-bersih-juhar
+          path: preprocessing/telco_churn_clean.csv
